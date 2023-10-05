@@ -16,7 +16,7 @@ import { JwtAuthGuard } from 'src/global/guards';
 import { ISession } from 'src/global/interfaces';
 
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto, AuthResponseDto } from './dtos';
+import { LoginDto, RegisterDto, AuthResponseDto, GoogleLoginDto } from './dtos';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -65,6 +65,12 @@ export class AuthController {
       secure: true,
       httpOnly: true,
     });
+  }
+
+  @Post('google')
+  @HttpCode(200)
+  googleLogin(@Body() dto: GoogleLoginDto) {
+    return this.authService.googleLogin(dto);
   }
 
   @Get('checkauth')

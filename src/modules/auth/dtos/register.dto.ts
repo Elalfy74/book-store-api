@@ -25,9 +25,9 @@ export class RegisterDto {
 
   @IsUrl()
   @IsOptional()
-  avatar: string;
+  avatar?: string;
 
   @IsMobilePhone('ar-EG')
   @IsOptional()
-  phone: string;
+  phone?: string;
 }
