@@ -44,6 +44,7 @@ export class AuthService {
   }
 
   async googleLogin(dto: GoogleLoginDto) {
+    console.log(dto.accessToken);
     const email = await this.verifyGoogleToken(dto.accessToken);
 
     const user = await this.prisma.user.findUnique({ where: { email } });
