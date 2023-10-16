@@ -1,8 +1,4 @@
-import {
-  INestApplication,
-  RequestMethod,
-  ValidationPipe,
-} from '@nestjs/common';
+import { INestApplication, RequestMethod, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
@@ -30,7 +26,7 @@ export const setup = (app: INestApplication) => {
   app.use(cookieParser());
 
   // Set cors
-  const frontEndUrl: string = configService.get('FRONTEND_URL');
+  const frontEndUrl: string = configService.get('FRONTEND_URL')!;
 
   app.enableCors({
     origin: [...frontEndUrl.split(' ')],
