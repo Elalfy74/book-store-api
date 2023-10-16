@@ -9,10 +9,10 @@ export class TokenService {
   constructor(private jwt: JwtService, private config: ConfigService) {}
 
   signToken(payload: ISession, type: 'access' | 'refresh') {
-    const secret =
+    const secret: string =
       type === 'access'
-        ? this.config.get('ACCESS_TOKEN_SECRET')
-        : this.config.get('REFRESH_TOKEN_SECRET');
+        ? this.config.get('ACCESS_TOKEN_SECRET')!
+        : this.config.get('REFRESH_TOKEN_SECRET')!;
 
     // AccessToken has expire data but refreshToken doesn't
     if (type === 'access') {
@@ -29,8 +29,7 @@ export class TokenService {
 
   reIssueAccessToken(refreshToken: string) {
     // Verify the refresh token
-    const decoded: JwtPayload | undefined =
-      this.verifyRefreshToken(refreshToken);
+    const decoded = this.verifyRefreshToken(refreshToken);
 
     if (!decoded) return false;
 
@@ -52,11 +51,10 @@ export class TokenService {
 
   private verifyRefreshToken(refreshToken: string) {
     try {
-      return this.jwt.verify(refreshToken, {
+      return this.jwt.verify<JwtPayload>(refreshToken, {
         secret: this.config.get('REFRESH_TOKEN_SECRET'),
       });
     } catch (e: any) {
-      console.error(e);
       return undefined;
     }
   }

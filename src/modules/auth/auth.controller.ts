@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Logger, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -25,10 +17,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(
-    @Body() dto: RegisterDto,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) response: Response) {
     const savedUser = await this.authService.register(dto);
 
     response.cookie('refreshToken', savedUser.refreshToken, {
@@ -42,10 +31,7 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
-  async login(
-    @Body() dto: LoginDto,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async login(@Body() dto: LoginDto, @Res({ passthrough: true }) response: Response) {
     const user = await this.authService.login(dto);
 
     response.cookie('refreshToken', user.refreshToken, {
