@@ -3,7 +3,7 @@ import { compare, hash } from 'bcryptjs';
 import { PrismaService } from 'nestjs-prisma';
 
 import { AuthResService } from '../shared/auth-res.service';
-import type { AuthServiceReturn } from '../shared/dtos';
+import type { TokensAndUser } from '../shared/interfaces';
 
 import { RegisterDto, LoginDto } from './dtos';
 
@@ -14,19 +14,17 @@ export class CredentialsService {
     private readonly authResServices: AuthResService,
   ) {}
 
-  async register(dto: RegisterDto): Promise<AuthServiceReturn> {
+  async register(dto: RegisterDto): Promise<TokensAndUser> {
     const { password } = dto;
     // Hash password and register user
     dto.password = await hash(password, 12);
 
-    const user = await this.prisma.user.create({
-      data: dto,
-    });
+    const user = await this.prisma.user.create({ data: dto });
 
     return this.authResServices.generateAuthResults(user);
   }
 
-  async login({ email, password: hash }: LoginDto): Promise<AuthServiceReturn> {
+  async login({ email, password: hash }: LoginDto): Promise<TokensAndUser> {
     // Check email
     const user = await this.prisma.user.findUnique({ where: { email } });
 

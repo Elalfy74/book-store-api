@@ -4,10 +4,7 @@ import { ConfigService } from '@nestjs/config';
 
 import type { ISession, JwtPayload } from 'src/global/interfaces';
 
-export interface Tokens {
-  accessToken: string;
-  refreshToken: string;
-}
+import type { Tokens } from './interfaces';
 
 @Injectable()
 export class TokensService {

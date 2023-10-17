@@ -5,9 +5,9 @@ import type { User } from '@prisma/client';
 import type { ISession } from 'src/global/interfaces';
 
 import { TokensService } from './tokens.service';
-import type { AuthServiceReturn } from './dtos';
+import type { TokensAndUser } from './interfaces';
 
-type AuthResponse = Omit<AuthServiceReturn, 'refreshToken'>;
+export interface AccessTokenAndUser extends Omit<TokensAndUser, 'refreshToken'> {}
 
 @Injectable()
 export class AuthResService {
@@ -19,15 +19,15 @@ export class AuthResService {
     httpOnly: true,
   };
 
-  generateAuthResponse(authServiceResults: AuthServiceReturn, res: Response): AuthResponse {
-    const { refreshToken, ...userWithAccess } = authServiceResults;
+  generateAuthResponse(authServiceResults: TokensAndUser, res: Response): AccessTokenAndUser {
+    const { refreshToken, ...accessTokenAndUser } = authServiceResults;
 
     res.cookie('refreshToken', refreshToken, AuthResService.COOKIE_OPTIONS);
 
-    return userWithAccess;
+    return accessTokenAndUser;
   }
 
-  generateAuthResults(user: User): AuthServiceReturn {
+  generateAuthResults(user: User): TokensAndUser {
     const payload: ISession = { userId: user.id, email: user.email };
     const authTokens = this.tokensService.generateAuthTokens(payload);
 

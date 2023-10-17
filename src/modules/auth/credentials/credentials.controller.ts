@@ -21,16 +21,16 @@ export class CredentialsController {
 
   @Post('register')
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
-    const authServiceResults = await this.credentialsService.register(dto);
+    const tokensAndUser = await this.credentialsService.register(dto);
 
-    return this.authResService.generateAuthResponse(authServiceResults, res);
+    return this.authResService.generateAuthResponse(tokensAndUser, res);
   }
 
   @Post('login')
   @HttpCode(200)
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
-    const authServiceResults = await this.credentialsService.login(dto);
+    const tokensAndUser = await this.credentialsService.login(dto);
 
-    return this.authResService.generateAuthResponse(authServiceResults, res);
+    return this.authResService.generateAuthResponse(tokensAndUser, res);
   }
 }

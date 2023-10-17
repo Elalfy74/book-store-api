@@ -3,7 +3,7 @@ import { PrismaService } from 'nestjs-prisma';
 import axios from 'axios';
 
 import { AuthResService } from '../shared/auth-res.service';
-import type { AuthServiceReturn } from '../shared/dtos';
+import type { TokensAndUser } from '../shared/interfaces';
 
 import { GoogleLoginDto } from './dtos';
 
@@ -14,7 +14,7 @@ export class GoogleAuthService {
     private readonly authResService: AuthResService,
   ) {}
 
-  async login(dto: GoogleLoginDto): Promise<AuthServiceReturn> {
+  async login(dto: GoogleLoginDto): Promise<TokensAndUser> {
     const email = await this.verifyGoogleToken(dto.accessToken);
     const user = await this.prisma.user.findUnique({ where: { email } });
 
