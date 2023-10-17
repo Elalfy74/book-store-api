@@ -19,8 +19,6 @@ export class TokensService {
   private readonly REFRESH_TOKEN_TTL: string = this.config.get('REFRESH_TOKEN_TTL')!;
 
   generateAuthTokens(payload: ISession): Tokens {
-    console.log(this.ACCESS_TOKEN_SECRET, this.ACCESS_TOKEN_TTL, this.REFRESH_TOKEN_SECRET);
-
     const accessToken = this.signToken(payload, this.ACCESS_TOKEN_SECRET, this.ACCESS_TOKEN_TTL);
     const refreshToken = this.signToken(payload, this.REFRESH_TOKEN_SECRET, this.REFRESH_TOKEN_TTL);
 
