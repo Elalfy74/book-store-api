@@ -22,8 +22,8 @@ export class AuthResService {
   generateAuthResponse(authServiceResults: TokensAndUser, res: Response): AccessTokenAndUser {
     const { refreshToken, ...accessTokenAndUser } = authServiceResults;
 
-    res.cookie('refreshToken', refreshToken, this.COOKIE_OPTIONS);
-    res.cookie('accessToken', accessTokenAndUser.accessToken, this.COOKIE_OPTIONS);
+    res.cookie('refreshToken', authServiceResults.refreshToken, this.COOKIE_OPTIONS);
+    res.cookie('accessToken', authServiceResults.accessToken, this.COOKIE_OPTIONS);
 
     return accessTokenAndUser;
   }

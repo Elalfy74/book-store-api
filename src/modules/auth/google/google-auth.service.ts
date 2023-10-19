@@ -1,28 +1,29 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
 import axios from 'axios';
 
 import { AuthResService } from '../shared/auth-res.service';
 import type { TokensAndUser } from '../shared/interfaces';
+
+import { UsersService } from 'src/modules/users/users.service';
 
 import { GoogleLoginDto } from './dtos';
 
 @Injectable()
 export class GoogleAuthService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly usersService: UsersService,
     private readonly authResService: AuthResService,
   ) {}
 
   async login(dto: GoogleLoginDto): Promise<TokensAndUser> {
     const email = await this.verifyGoogleToken(dto.accessToken);
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.usersService.findOne({ where: { email } });
 
     if (user) return this.authResService.generateAuthResults(user);
 
     // Take the first part of the email
     const newUserName = email.split('@')[0];
-    const newUser = await this.prisma.user.create({
+    const newUser = await this.usersService.create({
       data: {
         email,
         name: newUserName,
