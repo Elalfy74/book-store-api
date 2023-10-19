@@ -13,7 +13,7 @@ export interface AccessTokenAndUser extends Omit<TokensAndUser, 'refreshToken'> 
 export class AuthResService {
   constructor(private readonly tokensService: TokensService) {}
 
-  private static readonly COOKIE_OPTIONS: CookieOptions = {
+  private readonly COOKIE_OPTIONS: CookieOptions = {
     sameSite: 'none',
     secure: true,
     httpOnly: true,
@@ -22,7 +22,8 @@ export class AuthResService {
   generateAuthResponse(authServiceResults: TokensAndUser, res: Response): AccessTokenAndUser {
     const { refreshToken, ...accessTokenAndUser } = authServiceResults;
 
-    res.cookie('refreshToken', refreshToken, AuthResService.COOKIE_OPTIONS);
+    res.cookie('refreshToken', refreshToken, this.COOKIE_OPTIONS);
+    res.cookie('accessToken', accessTokenAndUser.accessToken, this.COOKIE_OPTIONS);
 
     return accessTokenAndUser;
   }
