@@ -17,6 +17,7 @@ export class AuthResService {
     sameSite: 'none',
     secure: true,
     httpOnly: true,
+    domain: '.onrender.com',
   };
 
   generateAuthResponse(authServiceResults: TokensAndUser, res: Response): AccessTokenAndUser {
