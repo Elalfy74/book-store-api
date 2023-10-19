@@ -10,7 +10,7 @@ import { AuthResponseDto } from '../shared/dtos';
 import { CredentialsService } from './credentials.service';
 import { RegisterDto, LoginDto } from './dtos';
 
-@Controller('auth/credential')
+@Controller('auth/credentials')
 @ApiTags('Auth')
 @Serialize(AuthResponseDto)
 export class CredentialsController {
