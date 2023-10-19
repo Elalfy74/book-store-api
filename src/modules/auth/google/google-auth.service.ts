@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import type { User } from '@prisma/client';
 import axios from 'axios';
 
-import { AuthResService } from '../shared/auth-res.service';
 import type { TokensAndUser } from '../shared/interfaces';
-
+import { TokensService } from '../shared/tokens.service';
 import { UsersService } from 'src/modules/users/users.service';
 
 import { GoogleLoginDto } from './dtos';
@@ -12,25 +12,39 @@ import { GoogleLoginDto } from './dtos';
 export class GoogleAuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly authResService: AuthResService,
+    private readonly tokensService: TokensService,
   ) {}
 
   async login(dto: GoogleLoginDto): Promise<TokensAndUser> {
+    let user: User | null = null;
     const email = await this.verifyGoogleToken(dto.accessToken);
-    const user = await this.usersService.findOne({ where: { email } });
 
-    if (user) return this.authResService.generateAuthResults(user);
+    user = await this.usersService.findOne({ where: { email } });
+
+    if (user) {
+      const tokens = this.tokensService.generateAuthTokens({ userId: user.id, email: user.email });
+
+      return {
+        tokens,
+        user,
+      };
+    }
 
     // Take the first part of the email
     const newUserName = email.split('@')[0];
-    const newUser = await this.usersService.create({
+    user = await this.usersService.create({
       data: {
         email,
         name: newUserName,
       },
     });
 
-    return this.authResService.generateAuthResults(newUser);
+    const tokens = this.tokensService.generateAuthTokens({ userId: user.id, email: user.email });
+
+    return {
+      tokens,
+      user,
+    };
   }
 
   private async verifyGoogleToken(token: string): Promise<string> {

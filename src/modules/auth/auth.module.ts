@@ -13,12 +13,11 @@ import { GoogleAuthController } from './google/google-auth.controller';
 // Services
 import { CredentialsService } from './credentials/credentials.service';
 import { GoogleAuthService } from './google/google-auth.service';
-import { AuthResService } from './shared/auth-res.service';
 import { TokensService } from './shared/tokens.service';
 
 @Module({
   imports: [JwtModule.register({}), UsersModule],
   controllers: [AuthController, CredentialsController, GoogleAuthController],
-  providers: [JwtStrategy, CredentialsService, GoogleAuthService, AuthResService, TokensService],
+  providers: [JwtStrategy, CredentialsService, GoogleAuthService, TokensService],
 })
 export class AuthModule {}

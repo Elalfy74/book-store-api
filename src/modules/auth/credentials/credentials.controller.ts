@@ -4,26 +4,23 @@ import type { Response } from 'express';
 
 import { Serialize } from 'src/global/interceptors';
 
-import { AuthResService } from '../shared/auth-res.service';
-import { AuthResponseDto } from '../shared/dtos';
+import { AuthResGenerator } from '../shared/auth-res-generator';
+import { UserDto } from '../shared/dtos';
 
 import { CredentialsService } from './credentials.service';
 import { RegisterDto, LoginDto } from './dtos';
 
 @Controller('auth/credentials')
 @ApiTags('Auth')
-@Serialize(AuthResponseDto)
+@Serialize(UserDto)
 export class CredentialsController {
-  constructor(
-    private readonly credentialsService: CredentialsService,
-    private readonly authResService: AuthResService,
-  ) {}
+  constructor(private readonly credentialsService: CredentialsService) {}
 
   @Post('register')
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
     const tokensAndUser = await this.credentialsService.register(dto);
 
-    return this.authResService.generateAuthResponse(tokensAndUser, res);
+    return AuthResGenerator.generateAuthResponse(tokensAndUser, res);
   }
 
   @Post('login')
@@ -31,6 +28,6 @@ export class CredentialsController {
   async login(@Body() dto: LoginDto, @Res({ passthrough: true }) res: Response) {
     const tokensAndUser = await this.credentialsService.login(dto);
 
-    return this.authResService.generateAuthResponse(tokensAndUser, res);
+    return AuthResGenerator.generateAuthResponse(tokensAndUser, res);
   }
 }

@@ -31,7 +31,6 @@ export const setup = (app: INestApplication) => {
   app.enableCors({
     origin: [...frontEndUrl.split(' ')],
     credentials: true,
-    exposedHeaders: ['x-access-token'],
   });
 
   // Set Swagger
